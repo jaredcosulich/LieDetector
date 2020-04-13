@@ -1,20 +1,30 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Random = UnityEngine.Random;
+
 public class LieDetector : MonoBehaviour
 {
+    String basePath;
+
     Material sphereMaterial;
 
     AudioSource audioSource;
     List<AudioClip> audioClips = new List<AudioClip>();
     List<Color> colors = new List<Color>();
 
+    float minimumAudioLevel = 10;
+
+    Csv csv;
+
     // Start is called before the first frame update
     void Start()
     {
         Initialize();
         StartCoroutine(Run());
+        Save();
     }
 
     // Update is called once per frame
@@ -24,6 +34,9 @@ public class LieDetector : MonoBehaviour
 
     void Initialize()
     {
+        String desktopPath = System.Environment.SpecialFolder.Desktop.ToString();
+        basePath = System.IO.Path.Combine(desktopPath, "LieDetector");
+
         List<Material> materials = new List<Material>();
         GameObject.Find("Sphere").GetComponent<Renderer>().GetMaterials(materials);
         sphereMaterial = materials[0];
@@ -35,17 +48,42 @@ public class LieDetector : MonoBehaviour
         colors.Add(Color.green);
         colors.Add(Color.yellow);
         colors.Add(Color.white);
+
+        InitializeCsv();
+    }
+
+    void InitializeCsv()
+    {
+        List<String> headers = new List<String>();
+
+        headers.Add("Time");
+
+        String[] sensors = { "Camera", "Left Eye", "Right Eye", "Combine Eye" };
+        String[] aspects = { "Position", "Direction" };
+        String[] xyz = { "X", "Y", "Z" };
+        foreach (String sensor in sensors)
+        {
+            foreach (String aspect in aspects)
+            {
+                foreach (String columnType in xyz) headers.Add($"{sensor} {aspect} {columnType}");
+            }
+        }
+        headers.Add("Left Pupil Diameter,Right Pupil Diameter,Left Eye Openness,Right Eye Openness,Left Eye Blink,Right Eye Blink");
+
+        csv = new Csv(basePath, headers);
     }
 
     IEnumerator Run()
     {
-        Debug.Log("RUN");
         while (audioClips.Count < 15) {
-            Debug.Log("CHANGE COLOR");
             ChangeColor(RandomNewColor());
-            Debug.Log("RECORD CLIP");
             yield return RecordClip();
         }
+    }
+
+    Color RandomColor()
+    {
+        return colors[Random.Range(0, colors.Count - 1)];
     }
 
     Color RandomNewColor()
@@ -59,12 +97,6 @@ public class LieDetector : MonoBehaviour
         return newColor;
     }
 
-    Color RandomColor()
-    {
-        
-        return colors[Random.Range(0, colors.Count - 1)];
-    }
-
     void ChangeColor(Color c)
     {
         sphereMaterial.SetColor("_Color", c);
@@ -72,90 +104,74 @@ public class LieDetector : MonoBehaviour
 
     IEnumerator RecordClip()
     {
+        audioSource.clip = Microphone.Start(null, false, 200, 44100);
+        int endPosition = 0;
+
         bool startedTalking = false;
         bool stoppedTalking = false;
 
         float colorTime = Time.fixedTime;
 
-        while (!stoppedTalking && (Time.fixedTime - colorTime < 2))
+        while (!stoppedTalking)
         {
-            //if (Microphone.GetPosition(null) > 0)
-            //{
-            //    int sampleCount = 1024;
-            //    float[] clipSampleData = new float[sampleCount];
-            //    float[] samples = new float[audioSource.clip.samples];
-            //    audioSource.clip.GetData(samples, 0);
+            if (Microphone.GetPosition(null) > 0)
+            {
+                int sampleCount = 1024;
+                float[] clipSampleData = new float[sampleCount];
+                float[] samples = new float[audioSource.clip.samples];
+                audioSource.clip.GetData(samples, 0);
 
-            //    float[] clipSamples = new float[Microphone.GetPosition(null)];
-            //    //Array.Copy(samples, clipSamples, clipSamples.Length - 1);
-            //}
+                float[] clipSamples = new float[Microphone.GetPosition(null)];
+                Array.Copy(samples, clipSamples, clipSamples.Length - 1);
+
+                float sum = 0;
+
+                if (clipSamples.Length > sampleCount)
+                {
+                    for (var i = clipSamples.Length - 1; i > clipSamples.Length - sampleCount; i--)
+                    {
+                        sum += Mathf.Abs(clipSamples[i]);
+                    }
+                }
+
+                if (sum > minimumAudioLevel)
+                {
+                    startedTalking = true;
+                }
+                else if (startedTalking && sum < minimumAudioLevel)
+                {
+                    stoppedTalking = true;
+                }
+            }
 
             yield return new WaitForEndOfFrame();
+
         }
-        //                    {
-        //                        SteamVR_Input_Sources RightInputSource = SteamVR_Input_Sources.RightHand;
-        //                        triggerPressed = SteamVR_Actions._default.Squeeze.GetAxis(RightInputSource) > 0f;
 
-        //                        if (Microphone.GetPosition(null) > 0)
-        //                        {
-        //                            int sampleCount = 1024;
-        //                            float[] clipSampleData = new float[sampleCount];
-        //                            float[] samples = new float[audioSource.clip.samples];
-        //                            audioSource.clip.GetData(samples, 0);
+        endPosition = Microphone.GetPosition(null);
+        Microphone.End(null);
 
-        //                            float[] clipSamples = new float[Microphone.GetPosition(null)];
-        //                            Array.Copy(samples, clipSamples, clipSamples.Length - 1);
+        if (endPosition > 0)
+        {
+            float[] fullSamples = new float[audioSource.clip.samples];
+            audioSource.clip.GetData(fullSamples, 0);
+            float[] fullClipSamples = new float[endPosition];
+            Array.Copy(fullSamples, fullClipSamples, fullClipSamples.Length - 1);
+            AudioClip clip = AudioClip.Create($"Clip{audioClips.Count}", fullClipSamples.Length, 1, 44100, false);
+            clip.SetData(fullClipSamples, 0);
+            this.audioClips.Add(clip);
+        }
+    }
 
-        //                            float sum = 0;
-
-        //                            if (clipSamples.Length > sampleCount)
-        //                            {
-        //                                for (var i = clipSamples.Length - 1; i > clipSamples.Length - sampleCount; i--)
-        //                                {
-        //                                    sum += Mathf.Abs(clipSamples[i]);
-        //                                }
-        //                            }
-        //                            float currentAverageVolume = sum / clipSamples.Length;
-
-        //                            if (sum > minimumLevel)
-        //                            {
-        //                                startedTalking = true;
-        //                            }
-        //                            else if (startedTalking && sum < minimumLevel && !triggerPressed)
-        //                            {
-        //                                stoppedTalking = true;
-
-        //                                this.activeColorString = "-";
-        //                                this.activeIndex = -1;
-        //                                objects.UpdateInstructions("");
-        //                                yield return new WaitForSeconds(0.25f);
-        //                            }
-        //                        }
-
-        //                        yield return new WaitForEndOfFrame();
-        //                    }
-
-        //                    yield return new WaitForSeconds(Random.Range(0.5f, 1f));
-
-        //                    index += 1;
-        //                }
-
-        //                objects.Reset();
-        //                objects.UpdateInstructions("Great job!");
-
-        //                endPosition = Microphone.GetPosition(null);
-        //                Microphone.End(null);
-
-        //                if (endPosition > 0)
-        //                {
-        //                    float[] fullSamples = new float[audioSource.clip.samples];
-        //                    audioSource.clip.GetData(fullSamples, 0);
-        //                    float[] fullClipSamples = new float[endPosition];
-        //                    Array.Copy(fullSamples, fullClipSamples, fullClipSamples.Length - 1);
-        //                    AudioClip clip = AudioClip.Create("Stroop", fullClipSamples.Length, 1, 44100, false);
-        //                    clip.SetData(fullClipSamples, 0);
-        //                    this.audioClip = clip;
-        //                }
+    void Save()
+    {
+        int index = 0;
+        foreach (AudioClip audioClip in audioClips)
+        {
+            string wavFilePath = System.IO.Path.Combine(basePath, $"clip{index}.wav");
+            SavWav.Save(wavFilePath, audioClip);
+            index += 1;
+        }
     }
 }
 
