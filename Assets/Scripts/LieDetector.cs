@@ -36,6 +36,7 @@ public class LieDetector : MonoBehaviour
     {
         String desktopPath = System.Environment.SpecialFolder.Desktop.ToString();
         basePath = System.IO.Path.Combine(desktopPath, "LieDetector");
+        System.IO.Directory.CreateDirectory(basePath);
 
         List<Material> materials = new List<Material>();
         GameObject.Find("Sphere").GetComponent<Renderer>().GetMaterials(materials);
