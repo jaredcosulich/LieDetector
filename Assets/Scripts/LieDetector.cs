@@ -34,7 +34,7 @@ public class LieDetector : MonoBehaviour
 
     void Initialize()
     {
-        String applicationPath = System.Environment.SpecialFolder.ApplicationData.ToString();
+        String applicationPath = Application.persistentDataPath;
         basePath = System.IO.Path.Combine(applicationPath, "LieDetector");
         Debug.Log($"Outputting to: {basePath}");
         System.IO.Directory.CreateDirectory(basePath);
