@@ -34,10 +34,8 @@ public class LieDetector : MonoBehaviour
 
     void Initialize()
     {
-        String applicationPath = Application.persistentDataPath;
-        basePath = System.IO.Path.Combine(applicationPath, "LieDetector");
+        String basePath = Application.persistentDataPath;
         Debug.Log($"Outputting to: {basePath}");
-        System.IO.Directory.CreateDirectory(basePath);
 
         List<Material> materials = new List<Material>();
         GameObject.Find("Sphere").GetComponent<Renderer>().GetMaterials(materials);
