@@ -1,8 +1,8 @@
 ﻿<Properties StartupConfiguration="{53380383-D520-0AF5-156C-40E96ABD5C13}|">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Csv.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/LieDetector.cs">
     <Files>
-      <File FileName="Assets/Scripts/LieDetector.cs" Line="144" Column="24" />
-      <File FileName="Assets/Scripts/Csv.cs" Line="12" Column="1" />
+      <File FileName="Assets/Scripts/LieDetector.cs" Line="78" Column="27" />
+      <File FileName="Assets/Scripts/Csv.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -10,7 +10,7 @@
           <Node name="LieDetector" expanded="True">
             <Node name="Assets" expanded="True">
               <Node name="Scripts" expanded="True">
-                <Node name="Csv.cs" selected="True" />
+                <Node name="LieDetector.cs" selected="True" />
               </Node>
             </Node>
           </Node>
@@ -20,7 +20,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="fd6642ac-8cc1-4aab-aaf5-2bbda75e564b" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="ba7ecc5c-de82-480f-85c4-5ef2903f7e9a" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

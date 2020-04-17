@@ -10,8 +10,9 @@ public class Csv
     public Csv(string path, List<String> headers)
     {
         this.path = path;
-        sw = new StreamWriter(path);
-        Header(headers);
+        Debug.Log(path);
+        //sw = new StreamWriter(path);
+        //Header(headers);
     }
 
     public void Close()
@@ -25,6 +26,16 @@ public class Csv
         sw.Write(String.Join(",", headers));
         sw.WriteLine(",Total Time,Delta Time");
         sw.Flush();
+
+    }
+
+    public void Row(List<String> data)
+    {
+        //data.Add()
+        sw.WriteLine(string.Join(",", data));
+        //sw.Flush();
+
+        //lastTime = Time.time;
 
     }
 }
