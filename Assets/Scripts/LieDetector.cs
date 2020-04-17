@@ -134,6 +134,7 @@ public class LieDetector : MonoBehaviour
                     }
                 }
 
+                Debug.Log($"SUM: {sum} - MINIMUM: {minimumAudioLevel}");
                 if (sum > minimumAudioLevel)
                 {
                     startedTalking = true;
