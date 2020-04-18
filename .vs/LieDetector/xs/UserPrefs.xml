@@ -2,7 +2,7 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/LieDetector.cs">
     <Files>
       <File FileName="Assets/Scripts/LieDetector.cs" Line="18" Column="36" />
-      <File FileName="Assets/Scripts/Csv.cs" Line="4" Column="19" />
+      <File FileName="Assets/Scripts/Csv.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -20,7 +20,7 @@
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="ba7ecc5c-de82-480f-85c4-5ef2903f7e9a" />
+  <MonoDevelop.Ide.ItemProperties.Assembly-CSharp PreferredExecutionTarget="bee14f18-54cd-45ae-83d7-331e1afa987a" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
