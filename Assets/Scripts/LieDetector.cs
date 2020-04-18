@@ -15,7 +15,7 @@ public class LieDetector : MonoBehaviour
     List<AudioClip> audioClips = new List<AudioClip>();
     List<Color> colors = new List<Color>();
 
-    float minimumAudioLevel = 0.01f;
+    float minimumAudioLevel = 10;
 
     Csv csv;
 
@@ -133,11 +133,6 @@ public class LieDetector : MonoBehaviour
                         sum += Mathf.Abs(clipSamples[i]);
                     }
                 }
-
-                Debug.Log($"SUM: {sum} - MINIMUM: {minimumAudioLevel}");
-                Color redT = Color.red;
-                redT.a = sum * 10;
-                sphereMaterial.SetColor("_Color", redT);
 
                 if (sum > minimumAudioLevel)
                 {
