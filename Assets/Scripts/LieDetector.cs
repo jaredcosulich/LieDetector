@@ -15,7 +15,7 @@ public class LieDetector : MonoBehaviour
     List<AudioClip> audioClips = new List<AudioClip>();
     List<Color> colors = new List<Color>();
 
-    float minimumAudioLevel = 0.005f;
+    float minimumAudioLevel = 0.01f;
 
     Csv csv;
 
@@ -104,7 +104,6 @@ public class LieDetector : MonoBehaviour
 
     IEnumerator RecordClip()
     {
-        Debug.Log("START");
         audioSource.clip = Microphone.Start(null, false, 200, 44100);
         int endPosition = 0;
 
@@ -115,11 +114,8 @@ public class LieDetector : MonoBehaviour
 
         while (!stoppedTalking)
         {
-            Debug.Log("IN");
-
             if (Microphone.GetPosition(null) > 0)
             {
-                Debug.Log("IN1");
                 int sampleCount = 1024;
                 float[] clipSampleData = new float[sampleCount];
                 float[] samples = new float[audioSource.clip.samples];
