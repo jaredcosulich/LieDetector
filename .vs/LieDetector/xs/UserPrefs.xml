@@ -1,8 +1,8 @@
 ﻿<Properties StartupConfiguration="{53380383-D520-0AF5-156C-40E96ABD5C13}|">
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/LieDetector.cs">
     <Files>
-      <File FileName="Assets/Scripts/LieDetector.cs" Line="78" Column="27" />
-      <File FileName="Assets/Scripts/Csv.cs" />
+      <File FileName="Assets/Scripts/LieDetector.cs" Line="18" Column="36" />
+      <File FileName="Assets/Scripts/Csv.cs" Line="4" Column="19" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
