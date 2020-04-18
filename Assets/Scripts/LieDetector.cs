@@ -15,7 +15,7 @@ public class LieDetector : MonoBehaviour
     List<AudioClip> audioClips = new List<AudioClip>();
     List<Color> colors = new List<Color>();
 
-    float minimumAudioLevel = 10;
+    float minimumAudioLevel = 0.005;
 
     Csv csv;
 
