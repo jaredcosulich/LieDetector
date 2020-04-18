@@ -135,6 +135,10 @@ public class LieDetector : MonoBehaviour
                 }
 
                 Debug.Log($"SUM: {sum} - MINIMUM: {minimumAudioLevel}");
+                Color redT = Color.red;
+                redT.a = sum * 10;
+                sphereMaterial.SetColor("_Color", redT);
+
                 if (sum > minimumAudioLevel)
                 {
                     startedTalking = true;
