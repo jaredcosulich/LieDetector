@@ -84,6 +84,12 @@ public class LieDetector : MonoBehaviour
         }
 
         Save();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+		Application.Quit();
+#endif
     }
 
     Color RandomColor()
@@ -117,7 +123,7 @@ public class LieDetector : MonoBehaviour
 
         float colorTime = Time.fixedTime;
 
-        while (!stoppedTalking && Time.fixedTime - colorTime < 2)
+        while (!stoppedTalking || Time.fixedTime - colorTime < 2)
         {
             if (Microphone.GetPosition(null) > 0)
             {
