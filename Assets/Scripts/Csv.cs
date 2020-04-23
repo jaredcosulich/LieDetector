@@ -15,8 +15,8 @@ public class Csv
     {
         this.path = path;
         Debug.Log(path);
-        //sw = new StreamWriter(path);
-        //Header(headers);
+        sw = new StreamWriter(path);
+        Header(headers);
     }
 
     public void Close()

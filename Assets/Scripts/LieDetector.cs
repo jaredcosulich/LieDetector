@@ -35,8 +35,7 @@ public class LieDetector : MonoBehaviour
 
     void Initialize()
     {
-        String basePath = Application.persistentDataPath;
-        Debug.Log($"Outputting to: {basePath}");
+        basePath = Application.persistentDataPath;
 
         List<Material> materials = new List<Material>();
         GameObject.Find("Sphere").GetComponent<Renderer>().GetMaterials(materials);
@@ -67,6 +66,7 @@ public class LieDetector : MonoBehaviour
         }
         headers.Add("Left Pupil Diameter,Right Pupil Diameter,Left Eye Openness,Right Eye Openness");
 
+        
         csv = new Csv(basePath, headers);
     }
 
