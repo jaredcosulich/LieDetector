@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Csv
 {
-    string path;
     private static StreamWriter sw;
 
     float startTime = -1f;
@@ -13,9 +12,9 @@ public class Csv
 
     public Csv(string path, List<String> headers)
     {
-        this.path = path;
         Debug.Log(path);
-        sw = new StreamWriter(path);
+        string csvPath = Path.Combine(path, "csv.csv");
+        sw = new StreamWriter(csvPath);
         Header(headers);
     }
 
