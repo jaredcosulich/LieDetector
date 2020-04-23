@@ -8,6 +8,9 @@ public class Csv
     string path;
     private static StreamWriter sw;
 
+    float startTime = -1f;
+    float lastTime = -1f;
+
     public Csv(string path, List<String> headers)
     {
         this.path = path;
@@ -32,12 +35,15 @@ public class Csv
 
     public void Row(List<String> data)
     {
-        //data.Add()
+        if (startTime == -1) startTime = Time.time;
+        if (lastTime == -1) lastTime = Time.time;
+
+        data.Add((Time.time - startTime).ToString());
+        data.Add((Time.time - lastTime).ToString());
         sw.WriteLine(string.Join(",", data));
         //sw.Flush();
 
-        //lastTime = Time.time;
-
+        lastTime = Time.time;
     }
 }
 

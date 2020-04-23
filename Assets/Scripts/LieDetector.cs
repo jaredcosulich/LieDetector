@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ViveSR.anipal.Eye;
 
 using Random = UnityEngine.Random;
 
@@ -58,24 +59,21 @@ public class LieDetector : MonoBehaviour
 
         headers.Add("Time");
 
-        String[] sensors = { "Camera", "Left Eye", "Right Eye", "Combine Eye" };
-        String[] aspects = { "Position", "Direction" };
+        String[] sensors = { "Camera", "Combine Gaze" };
         String[] xyz = { "X", "Y", "Z" };
         foreach (String sensor in sensors)
         {
-            foreach (String aspect in aspects)
-            {
-                foreach (String columnType in xyz) headers.Add($"{sensor} {aspect} {columnType}");
-            }
+            foreach (String columnType in xyz) headers.Add($"{sensor} {columnType}");
         }
-        headers.Add("Left Pupil Diameter,Right Pupil Diameter,Left Eye Openness,Right Eye Openness,Left Eye Blink,Right Eye Blink");
+        headers.Add("Left Pupil Diameter,Right Pupil Diameter,Left Eye Openness,Right Eye Openness");
 
         csv = new Csv(basePath, headers);
     }
 
     IEnumerator Run()
     {
-        while (audioClips.Count < 15) {
+        while (audioClips.Count < 15)
+        {
             ChangeColor(RandomNewColor());
             yield return RecordClip();
         }
@@ -144,6 +142,8 @@ public class LieDetector : MonoBehaviour
                 }
             }
 
+            recordCsv();
+
             yield return new WaitForEndOfFrame();
 
         }
@@ -161,6 +161,38 @@ public class LieDetector : MonoBehaviour
             clip.SetData(fullClipSamples, 0);
             this.audioClips.Add(clip);
         }
+    }
+
+    void recordCsv()
+    {
+        List<String> data = new List<String>();
+
+        Action<Vector3> addVector3ToCsv = (Vector3 vector3) =>
+        {
+            data.Add(vector3.x.ToString());
+            data.Add(vector3.y.ToString());
+            data.Add(vector3.z.ToString());
+        };
+
+        Ray cameraRay = Camera.main.ViewportPointToRay(new Vector3(0.5F, 0.5F, 0));
+        addVector3ToCsv(cameraRay.direction);
+
+        Ray gazeRay = new Ray();
+        SRanipal_Eye.GetGazeRay(GazeIndex.COMBINE, out gazeRay);
+        addVector3ToCsv(gazeRay.direction);
+
+        //EyeData eyeData = new EyeData();
+
+        ViveSR.anipal.Eye.EyeData eyeData = new ViveSR.anipal.Eye.EyeData();
+        SRanipal_Eye_API.GetEyeData(ref eyeData);
+
+        data.Add(eyeData.verbose_data.left.pupil_diameter_mm.ToString());
+        data.Add(eyeData.verbose_data.left.pupil_diameter_mm.ToString());
+
+        data.Add(eyeData.verbose_data.left.eye_openness.ToString());
+        data.Add(eyeData.verbose_data.right.eye_openness.ToString());
+
+        csv.Row(data);
     }
 
     void Save()
