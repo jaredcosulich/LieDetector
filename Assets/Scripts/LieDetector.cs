@@ -80,7 +80,10 @@ public class LieDetector : MonoBehaviour
         {
             ChangeColor(RandomNewColor());
             yield return RecordClip();
+            Debug.Log(audioClips.Count);
         }
+
+        Save();
     }
 
     Color RandomColor()
@@ -114,7 +117,7 @@ public class LieDetector : MonoBehaviour
 
         float colorTime = Time.fixedTime;
 
-        while (!stoppedTalking)
+        while (!stoppedTalking && Time.fixedTime - colorTime < 2)
         {
             if (Microphone.GetPosition(null) > 0)
             {
