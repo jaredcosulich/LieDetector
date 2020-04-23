@@ -15,11 +15,13 @@ public class LieDetector : MonoBehaviour
 
     AudioSource audioSource;
     List<AudioClip> audioClips = new List<AudioClip>();
-    List<Color> colors = new List<Color>();
+    List<System.Object[]> colors = new List<System.Object[]>();
 
-    float minimumAudioLevel = 10;
+    float talkingAudioLevel = 10;
+    float notTalkingAudioLevel = 2;
 
     Csv csv;
+    String currentColor;
 
     // Start is called before the first frame update
     void Start()
@@ -46,12 +48,12 @@ public class LieDetector : MonoBehaviour
         sphereMaterial = materials[0];
 
         audioSource = GameObject.Find("Audio Source").GetComponent<AudioSource>();
-        colors.Add(Color.black);
-        colors.Add(Color.blue);
-        colors.Add(Color.red);
-        colors.Add(Color.green);
-        colors.Add(Color.yellow);
-        colors.Add(Color.white);
+        colors.Add(new System.Object[] { "Black", Color.black });
+        colors.Add(new System.Object[] { "Blue", Color.blue });
+        colors.Add(new System.Object[] { "Red", Color.red });
+        colors.Add(new System.Object[] { "Green", Color.green });
+        colors.Add(new System.Object[] { "Yellow", Color.yellow });
+        colors.Add(new System.Object[] { "White", Color.white });
 
         InitializeCsv();
     }
@@ -60,7 +62,7 @@ public class LieDetector : MonoBehaviour
     {
         List<String> headers = new List<String>();
 
-        headers.Add("Time");
+        headers.Add("Color");
 
         String[] sensors = { "Camera", "Combine Gaze" };
         String[] xyz = { "X", "Y", "Z" };
@@ -78,7 +80,9 @@ public class LieDetector : MonoBehaviour
     {
         while (audioClips.Count < 15)
         {
-            ChangeColor(RandomNewColor());
+            System.Object[] newColorInfo = RandomNewColor();
+            currentColor = (String) newColorInfo[0];
+            ChangeColor((Color) newColorInfo[1]);
             yield return RecordClip();
             Debug.Log(audioClips.Count);
         }
@@ -92,20 +96,20 @@ public class LieDetector : MonoBehaviour
 #endif
     }
 
-    Color RandomColor()
+    System.Object[] RandomColor()
     {
         return colors[Random.Range(0, colors.Count - 1)];
     }
 
-    Color RandomNewColor()
+    System.Object[] RandomNewColor()
     {
         Color existingColor = sphereMaterial.GetColor("_Color");
-        Color newColor = RandomColor();
-        while (existingColor == newColor)
+        System.Object[] newColorInfo = RandomColor();
+        while (existingColor == (Color) newColorInfo[1])
         {
-            newColor = RandomColor();
+            newColorInfo = RandomColor();
         }
-        return newColor;
+        return newColorInfo;
     }
 
     void ChangeColor(Color c)
@@ -145,11 +149,11 @@ public class LieDetector : MonoBehaviour
                     }
                 }
 
-                if (sum > minimumAudioLevel)
+                if (sum > talkingAudioLevel)
                 {
                     startedTalking = true;
                 }
-                else if (startedTalking && sum < minimumAudioLevel)
+                else if (startedTalking && sum < notTalkingAudioLevel)
                 {
                     stoppedTalking = true;
                 }
@@ -179,6 +183,8 @@ public class LieDetector : MonoBehaviour
     void recordCsv()
     {
         List<String> data = new List<String>();
+
+        data.Add(currentColor);
 
         Action<Vector3> addVector3ToCsv = (Vector3 vector3) =>
         {
