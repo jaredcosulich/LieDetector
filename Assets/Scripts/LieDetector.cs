@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,7 +36,13 @@ public class LieDetector : MonoBehaviour
 
     void Initialize()
     {
-        basePath = Application.persistentDataPath;
+        string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        basePath = Path.Combine(desktop, "LieDetector");
+        Debug.Log(Directory.Exists(basePath));
+        // If the directory does not exist, then create it
+        if (!Directory.Exists(basePath))
+            Directory.CreateDirectory(basePath);
+        // Debug.Log(recordingDirectory);
 
         List<Material> materials = new List<Material>();
         GameObject.Find("Sphere").GetComponent<Renderer>().GetMaterials(materials);
