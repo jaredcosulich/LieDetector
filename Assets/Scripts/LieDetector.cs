@@ -17,7 +17,7 @@ public class LieDetector : MonoBehaviour
     List<AudioClip> audioClips = new List<AudioClip>();
     List<System.Object[]> colors = new List<System.Object[]>();
 
-    float talkingAudioLevel = 12;
+    float talkingAudioLevel = 30;
     float notTalkingAudioLevel = 2;
 
     Csv csv;
@@ -126,9 +126,7 @@ public class LieDetector : MonoBehaviour
         bool startedTalking = false;
         bool stoppedTalking = false;
 
-        float colorTime = Time.fixedTime;
-
-        while (!stoppedTalking || Time.fixedTime - colorTime < 1)
+        while (!stoppedTalking)
         {
             if (Microphone.GetPosition(null) > 0)
             {
@@ -159,12 +157,6 @@ public class LieDetector : MonoBehaviour
                 {
                     stoppedTalking = true;
                 }
-
-                if (stoppedTalking)
-                {
-                    Debug.Log($"#{currentColor} -- SUM: {sum} -- TIME: #{Time.fixedTime - colorTime}");
-
-                }
             }
 
             recordCsv();
@@ -172,7 +164,7 @@ public class LieDetector : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        Debug.Log("OUT");
+        yield return new WaitForSeconds(0.5f);
 
         endPosition = Microphone.GetPosition(null);
         Microphone.End(null);
