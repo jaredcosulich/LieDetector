@@ -17,7 +17,7 @@ public class LieDetector : MonoBehaviour
     List<AudioClip> audioClips = new List<AudioClip>();
     List<System.Object[]> colors = new List<System.Object[]>();
 
-    float talkingAudioLevel = 30;
+    float talkingAudioLevel = 20;
     float notTalkingAudioLevel = 2;
 
     Csv csv;
@@ -150,7 +150,6 @@ public class LieDetector : MonoBehaviour
 
                 if (sum > talkingAudioLevel)
                 {
-                    Debug.Log($"#{currentColor} -- STARTED TALKING -- SUM: {sum}");
                     startedTalking = true;
                 }
                 else if (startedTalking && sum < notTalkingAudioLevel)
