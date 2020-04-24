@@ -152,6 +152,7 @@ public class LieDetector : MonoBehaviour
 
                 if (sum > talkingAudioLevel)
                 {
+                    Debug.Log($"#{currentColor} -- STARTED TALKING -- SUM: {sum} -- TIME: #{Time.fixedTime - colorTime}");
                     startedTalking = true;
                 }
                 else if (startedTalking && sum < notTalkingAudioLevel)
