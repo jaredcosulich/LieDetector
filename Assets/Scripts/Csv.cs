@@ -12,8 +12,11 @@ public class Csv
 
     public Csv(string path, List<String> headers)
     {
-        Debug.Log(path);
-        string csvPath = Path.Combine(path, "csv.csv");
+        string csvFolderPath = Path.Combine(path, DateTime.Now.ToShortTimeString());
+        if (!Directory.Exists(csvFolderPath))
+            Directory.CreateDirectory(csvFolderPath);
+
+        string csvPath = Path.Combine(csvFolderPath, "csv.csv");
         sw = new StreamWriter(csvPath);
         Header(headers);
     }
