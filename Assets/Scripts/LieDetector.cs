@@ -84,7 +84,6 @@ public class LieDetector : MonoBehaviour
             currentColor = (String) newColorInfo[0];
             ChangeColor((Color) newColorInfo[1]);
             yield return RecordClip();
-            Debug.Log(audioClips.Count);
         }
 
         Save();
@@ -159,13 +158,20 @@ public class LieDetector : MonoBehaviour
                 {
                     stoppedTalking = true;
                 }
+
+                if (stoppedTalking)
+                {
+                    Debug.Log($"SUM: {sum} -- TIME: #{Time.fixedTime - colorTime}");
+
+                }
             }
 
             recordCsv();
 
             yield return new WaitForEndOfFrame();
-
         }
+
+        Debug.Log("OUT");
 
         endPosition = Microphone.GetPosition(null);
         Microphone.End(null);
