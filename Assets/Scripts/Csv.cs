@@ -12,7 +12,8 @@ public class Csv
 
     public Csv(string path, List<String> headers)
     {
-        string csvFolderPath = Path.Combine(path, DateTime.Now.ToShortTimeString());
+        string csvFolderPath = Path.Combine(path, DateTime.Now.ToString());
+        Debug.Log($"PATH: {csvFolderPath}");
         if (!Directory.Exists(csvFolderPath))
             Directory.CreateDirectory(csvFolderPath);
 
