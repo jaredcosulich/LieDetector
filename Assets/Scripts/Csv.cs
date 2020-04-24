@@ -21,6 +21,7 @@ public class Csv
     public void Close()
     {
         if (sw == null) return;
+        sw.Flush();
         sw.Close();
     }
 
@@ -40,7 +41,6 @@ public class Csv
         data.Add((Time.time - startTime).ToString());
         data.Add((Time.time - lastTime).ToString());
         sw.WriteLine(string.Join(",", data));
-        //sw.Flush();
 
         lastTime = Time.time;
     }
