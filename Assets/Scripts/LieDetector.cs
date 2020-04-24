@@ -161,7 +161,7 @@ public class LieDetector : MonoBehaviour
 
                 if (stoppedTalking)
                 {
-                    Debug.Log($"SUM: {sum} -- TIME: #{Time.fixedTime - colorTime}");
+                    Debug.Log($"#{currentColor} -- SUM: {sum} -- TIME: #{Time.fixedTime - colorTime}");
 
                 }
             }
