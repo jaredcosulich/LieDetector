@@ -120,7 +120,7 @@ public class LieDetector : MonoBehaviour
 
     IEnumerator RecordClip()
     {
-        audioSource.clip = Microphone.Start(null, false, 200, 44100);
+        audioSource.clip = Microphone.Start(null, false, 20, 44100);
         int endPosition = 0;
 
         bool startedTalking = false;
